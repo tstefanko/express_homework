@@ -115,10 +115,6 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/Book"
-        "400":
-          description: "Invalid book ID supplied"
-        "404":
-          description: "Book not found"
         "405":
           description: "New book not valid"
     get:
