@@ -33,9 +33,19 @@ const library = [
 ]
 
 const express = require("express")
+const Joi = require('joi')
 const app = express()
 const router = express.Router()
 
+function validateBook(book) {
+  const schema = {
+    title: Joi.string().required(),
+    author: Joi.string().required(),
+    pages: Joi.number().optional(),
+    tags: Joi.array().optional()
+  }
+  return Joi.validate(book, schema)
+}
 
 router.get('/library', (req, res) => { 
   res.send(library)
@@ -48,10 +58,8 @@ router.get('/library/:id', (req, res) => {
 })
 
 router.post('/library', (req, res) => {
-if(!req.body.title || !req.body.author || !req.body.pages || !req.body.tags) {
-  res.status(400).send('Title, Author, Pages and Tags are required')
-  return;
-}
+  const { error } = validateBook(req.body)
+  if(error) return res.status(400).send(error.details.message)
 
   const book = {
     id: library.length + 1,
@@ -68,11 +76,10 @@ router.put('/library/:id', (req, res) => {
   //look up the book
   const book = library.find(b => b.id === parseInt(req.params.id))
   if(!book) return res.status(404).send('Book was not found')
+  
   //validation
-  if(!req.body.title || !req.body.author || !req.body.pages || !req.body.tags) {
-    res.status(400).send('Title, Author, Pages and Tags are required')
-    return;
-  }
+  const { error } = validateBook(req.body)
+  if(error) return res.status(400).send(error.details.message)
 
   //update the library
   book.title = req.body.title
