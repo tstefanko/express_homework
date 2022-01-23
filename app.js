@@ -42,7 +42,7 @@ function validateBook(book) {
     title: Joi.string().required(),
     author: Joi.string().required(),
     pages: Joi.number().optional(),
-    tags: Joi.array().optional()
+    tags: Joi.array().items(Joi.string()).optional()
   }
   return Joi.validate(book, schema)
 }
