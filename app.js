@@ -1,6 +1,9 @@
 import express from 'express'
 import bookRoutes from './routes/book.js'
 import idRoutes from './routes/id.js'
+import { sequelize } from './models/tablefile.js'
+
+sequelize.sync()
 
 const app = express()
 
